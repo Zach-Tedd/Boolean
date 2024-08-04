@@ -1,0 +1,33 @@
+#include <stdio.h>
+
+// Function prototypes
+void passByValue(int a);
+void passByReference(int *a);
+
+int main() {
+    int num = 10;
+
+    printf("Initial value of num: %d\n", num);
+
+    // Pass-by-Value
+    passByValue(num);
+    printf("Value of num after passByValue: %d\n", num);
+
+    // Pass-by-Reference
+    passByReference(&num);
+    printf("Value of num after passByReference: %d\n", num);
+
+    return 0;
+}
+
+// Function to demonstrate pass-by-value
+void passByValue(int a) {
+    a = 20;
+    printf("Inside passByValue, value of a: %d\n", a);
+}
+
+// Function to demonstrate pass-by-reference
+void passByReference(int *a) {
+    *a = 30;
+    printf("Inside passByReference, value pointed by a: %d\n", *a);
+}
