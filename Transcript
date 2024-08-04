@@ -1,0 +1,87 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct {
+    char name[50];
+    int marks[3];
+    char grades[3];
+} Student;
+
+char assign_grade(int marks) {
+    if (marks >= 90) {
+        return 'A';
+    } else if (marks >= 80) {
+        return 'B';
+    } else if (marks >= 70) {
+        return 'C';
+    } else if (marks >= 60) {
+        return 'D';
+    } else {
+        return 'F';
+    }
+}
+
+void process_marks(Student students[], int n, double mean_marks[], char mean_grades[]) {
+    for (int j = 0; j < 3; j++) {
+        int total_marks = 0;
+        for (int i = 0; i < n; i++) {
+            students[i].grades[j] = assign_grade(students[i].marks[j]);
+            total_marks += students[i].marks[j];
+        }
+        mean_marks[j] = (double)total_marks / n;
+        mean_grades[j] = assign_grade(mean_marks[j]);
+    }
+}
+
+void generate_csv(Student students[], int n, double mean_marks[], char mean_grades[], const char *filename) {
+    FILE *file = fopen(filename, "w");
+    if (file == NULL) {
+        perror("Unable to open file");
+        exit(EXIT_FAILURE);
+    }
+
+    fprintf(file, "Name,Marks1,Grade1,Marks2,Grade2,Marks3,Grade3\n");
+    for (int i = 0; i < n; i++) {
+        fprintf(file, "%s,%d,%c,%d,%c,%d,%c\n", students[i].name, students[i].marks[0], students[i].grades[0], 
+                students[i].marks[1], students[i].grades[1], students[i].marks[2], students[i].grades[2]);
+    }
+    fprintf(file, "Mean,%lf,%c,%lf,%c,%lf,%c\n", mean_marks[0], mean_grades[0], mean_marks[1], mean_grades[1], mean_marks[2], mean_grades[2]);
+
+    fclose(file);
+    printf("Transcript saved as %s\n", filename);
+}
+
+void read_csv(const char *filename, Student students[], int *n) {
+    FILE *file = fopen(filename, "r");
+    if (file == NULL) {
+        perror("Unable to open file");
+        exit(EXIT_FAILURE);
+    }
+
+    char line[256];
+    *n = 0;
+    while (fgets(line, sizeof(line), file)) {
+        if (*n == 0) {  // Skip header
+            (*n)++;
+            continue;
+        }
+        sscanf(line, "%[^,],%d,%d,%d", students[*n - 1].name, &students[*n - 1].marks[0], &students[*n - 1].marks[1], &students[*n - 1].marks[2]);
+        (*n)++;
+    }
+
+    fclose(file);
+    *n -= 1;  // Adjust for header
+}
+
+int main() {
+    Student students[100];
+    int n;
+    double mean_marks[3];
+    char mean_grades[3];
+
+    read_csv("student_marks.csv", students, &n);
+    process_marks(students, n, mean_marks, mean_grades);
+    generate_csv(students, n, mean_marks, mean_grades, "transcript.csv");
+
+    return 0;
+}
