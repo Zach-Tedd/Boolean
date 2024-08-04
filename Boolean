@@ -1,0 +1,45 @@
+#include <stdio.h>
+#include <stdbool.h>
+
+// Function to print a Boolean value as "true" or "false"
+void print_bool(bool value) {
+    printf("%s", value ? "true" : "false");
+}
+
+int main() {
+    // Declare some Boolean variables
+    bool A = true;
+    bool B = false;
+    bool C = true;
+    bool D = false;
+
+    // Print the values of A, B, C, D
+    printf("A: "); print_bool(A); printf("\n");
+    printf("B: "); print_bool(B); printf("\n");
+    printf("C: "); print_bool(C); printf("\n");
+    printf("D: "); print_bool(D); printf("\n");
+
+    // Perform basic Boolean operations
+    bool A_and_B = A && B;
+    bool A_or_B = A || B;
+    bool not_A = !A;
+
+    // Print the results of the basic operations
+    printf("\nBasic Boolean Operations:\n");
+    printf("A AND B: "); print_bool(A_and_B); printf("\n");
+    printf("A OR B: "); print_bool(A_or_B); printf("\n");
+    printf("NOT A: "); print_bool(not_A); printf("\n");
+
+    // Perform some more complex Boolean expressions
+    bool expr1 = (A && B) || (C && !D);
+    bool expr2 = !(A || B) && (C || D);
+    bool expr3 = (A && !B) || (!C && D);
+
+    // Print the results of the complex expressions
+    printf("\nComplex Boolean Expressions:\n");
+    printf("(A AND B) OR (C AND NOT D): "); print_bool(expr1); printf("\n");
+    printf("NOT (A OR B) AND (C OR D): "); print_bool(expr2); printf("\n");
+    printf("(A AND NOT B) OR (NOT C AND D): "); print_bool(expr3); printf("\n");
+
+    return 0;
+}
